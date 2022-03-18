@@ -7,13 +7,7 @@
 # @Software: PyCharm
 import os
 from typing import Union, Tuple, List, Dict
-
-from yaml import load, dump
-
-try:
-    from .libs.yaml import CLoader as Loader, CDumper as Dumper
-except ImportError:
-    from yaml import Loader, Dumper
+from .libs import yaml
 
 
 class Yaml:
@@ -39,13 +33,13 @@ class Yaml:
         # 读取公共配置
         if os.path.exists(self.__config_file):
             with open(self.__config_file, "r") as f:
-                config = load(f, Loader)
+                config = yaml.safe_load(f)
                 self.config.update(config)
 
         # 读取私密配置
         if os.path.exists(self.__config_secret_file):
             with open(self.__config_secret_file, "r") as f:
-                config = load(f, Loader)
+                config = yaml.safe_load(f)
                 self.config.update(config)
 
     def __read_config(self, config: str):
@@ -56,7 +50,7 @@ class Yaml:
         """
         if os.path.exists(config):
             with open(config, "r") as f:
-                c = load(f, Loader)
+                c = yaml.safe_load(f)
                 self.config.update(c)
 
     def read_config(self, config: Union[str, List, Tuple]):
@@ -78,7 +72,7 @@ class Yaml:
         :return:
         """
         with open(config, "w") as f:
-            dump(self.config, f)
+            yaml.dump(self.config, f)
 
     def update_config(self, config: Union[Dict, str, List, Tuple]):
         """
